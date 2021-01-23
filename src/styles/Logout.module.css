@@ -1,0 +1,32 @@
+.centered {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.text {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 50px 40px 50px 40px;
+    text-align: center;
+}
+
+.text h2 {
+    font-size: 25px;
+    margin-bottom: 25px;
+}
+
+.linkdiv {
+    padding: 10px;
+}
+
+.link {
+    font-size: 18px;
+    padding: 6px;
+    text-decoration: none;
+    color: black;
+}
+
+.link:hover {
+    background-color: #FFFBCC;
+}

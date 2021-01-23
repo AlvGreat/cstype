@@ -1,8 +1,12 @@
 import styles from './App.module.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Navbar from './Navbar';
-import Home from './Home';
-import Profile from './Profile';
+
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import Profile from './components/Profile';
+import Practice from './components/Practice';
+import Login from './components/Login';
+import Logout from './components/Logout';
 
 function App() {
   return (
@@ -15,7 +19,16 @@ function App() {
               <Home />
             </Route>
             <Route path="/profile">
-              <Profile />
+              <Profile stats={{wpm: 138, avgWpm: 80, gamesPlayed: 18, avgAccuracy: 97.4, joinDate: "January 22nd, 2021"}}/>
+            </Route>
+            <Route path="/logout">
+              <Logout />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/practice">
+              <Practice />
             </Route>
           </Switch>
         </div>
