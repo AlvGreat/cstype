@@ -1,6 +1,5 @@
 import styles from '../styles/Practice.module.css';
-import { useState } from "react";
-import React from 'react';
+import { useState, useEffect } from 'react';
 
 const Practice = () => {
     // keep track of the character index the user is on 
@@ -36,6 +35,7 @@ const Practice = () => {
             "vector<int> v;",
             "unordered_map<int, int> m;",
             "void helper(vector<int>& nums, int x) {",
+            "include <bits/stdc++.h>;",
         ];
         return allTexts[Math.floor(Math.random() * allTexts.length)];
     }
@@ -48,6 +48,7 @@ const Practice = () => {
 
         setStartTime(null);
         setInaccuracies(0);
+        setAccuracyPercent(100);
         setWpm(0);
         setText(getRandText());
         setChIndex(0);
@@ -79,12 +80,15 @@ const Practice = () => {
     // if the user typed the correct key
     const handleKeyDown = ({ key }) => {
         // when the user hits the first key, start the timer
-        if(!startTime) setStartTime(new Date());
+        if(key.length === 1 &&  !startTime) setStartTime(new Date());
 
         if(chIndex < text.length) {
             // if they typed it right, move the index
             if(key === text[chIndex]) {
                 setChIndex(++chIndex);
+                
+                // calculate the stats every time the user hits a correct key
+                calculateStats(chIndex);
             }
             else if(key === "Backspace") {
                 setChIndex(--chIndex);
@@ -93,9 +97,6 @@ const Practice = () => {
             else if(key.length === 1){
                 setInaccuracies(++inaccuracies);
             }
-            
-            // calculate the stats every time the user hits a key
-            calculateStats(chIndex);
         }
 
         // if they hit the escape key, generate a new test
@@ -104,7 +105,7 @@ const Practice = () => {
         }
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
 
         // remove event listener after component is unmounted
@@ -118,12 +119,16 @@ const Practice = () => {
             <div>
                 {letterSpans}
                 <div className={styles.buttons}>
-                    {<btn onClick={newTest} className={styles.startBtn}>Next Test</btn>}
+                    {<div onClick={newTest} className={styles.startBtn}>Next Test</div>}
                 </div>
             </div>
-            <div>
-                <div>{`Speed: \t ${wpm} WPM`}</div>
-                <div>{`Accuracy \t ${accuracyPercent}%`}</div>
+            <div className={styles.stats}>
+                <div>{`Speed: ${wpm} WPM`}</div>
+                <div>{`Accuracy ${accuracyPercent}%`}</div>
+                <div className={styles.userStats}>
+                    <div>{`Avg. Speed: -- WPM`}</div>
+                    <div>{`Avg. Accuracy -- %`}</div>
+                </div>
             </div>
         </div>
     );

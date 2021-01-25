@@ -1,7 +1,15 @@
 import { Link } from 'react-router-dom';
 import styles from '../styles/Logout.module.css';
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const Logout = () => {
+    firebase.auth().signOut().then(() => {
+        // sign out successful
+    }).catch((error) => {
+        console.log(error);
+    });
+
     return (
         <div className={styles.centered}>
             <div className={styles.text}>

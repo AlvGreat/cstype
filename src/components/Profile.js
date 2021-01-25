@@ -16,7 +16,6 @@ const Profile = ({ stats }) => {
                     <h2>Date Joined: {stats.joinDate}</h2>
                 </div>
             </div>
-
         </div>
     );
 }

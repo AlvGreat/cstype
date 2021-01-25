@@ -20,8 +20,19 @@
     margin-top: 40px;
 }
 
+.stats {
+    font-size: 18px;
+}
+
+.userStats {
+    margin-top: 15px;
+    font-size: 15px;
+}
+
 .startBtn {
+    cursor: pointer;
     padding: 8px 15px;
+    display: inline-block;
     font-size: 18px;
     border-radius: 5px;
     background-color: #48cff0;
