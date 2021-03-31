@@ -1,16 +1,17 @@
 import styles from '../styles/LoginSignup.module.css';
 import { Redirect } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useRef} from 'react';
 
 import firebase from "firebase/app";
 import "firebase/auth";
 
 const Signup = () => {
+    let isMountedRef = useRef(null);
+
     let [returnToHome, setReturnToHome] = useState(false);
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
     let [username, setUsername] = useState("");
-    let [errorPage, setErrorPage] = useState(false);
     let [errorMessage, setErrorMessage] = useState(null);
 
     const updateEmail = (e) => {
@@ -28,35 +29,42 @@ const Signup = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        firebase.auth().createUserWithEmailAndPassword(email, password).then((userCredential) => {     
-            user.updateProfile({
-                displayName: username
-            }).catch(() => {
-                // fail
-            })
-            
-            const user = userCredential.user;
-            console.log(user);
-            setReturnToHome(true);
-        }).catch((error) => {
-            if(error.code === "auth/weak-password") {
-                setErrorMessage("Weak password, please try again.");
-            }
-            console.log(error.code);
-            console.log(error.message);
-            setErrorPage(true);
-        });
+        if(username.length < 3) {
+            setErrorMessage("You must choose a username longer than 3 characters");
+        }
+        else {
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {     
+                    // update their profile to set their username
+                    userCredential.user.updateProfile({
+                        displayName: username
+                    }).then(() => {
+                        if(isMountedRef.current) setReturnToHome(true);
+                    })
+                    .catch((error) => {
+                        if(isMountedRef.current) setErrorMessage(error.message);
+                    })
+                }).catch((error) => {
+                    // set the error message and don't let the user finish signing up
+                    if(isMountedRef.current) setErrorMessage(error.message);
+                });
+        }
     }
 
-    if(errorPage) {
-        return <Redirect to='error'/>
-    }
-    else if(returnToHome) {
+    // read the user data so that they see their average when loading screen
+    useEffect(() => {
+        isMountedRef.current = true; 
+
+        return () => isMountedRef.current = false;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    if(returnToHome) {
         return <Redirect to='/' />
     }
 
     return (
-        <div className={styles.center}>
+        <div>
             <form onSubmit={handleSubmit} className={styles.login}>
                 <h2 className={styles.title}>Sign up to track your progress!</h2>
                 <div className={styles.inputField}>
@@ -72,7 +80,7 @@ const Signup = () => {
                     <input type="password" placeholder="Password" onChange={updatePassword}/>
                 </div>
                 <h3 className={styles.errorMsg}>{errorMessage}</h3>
-                <input type="submit" value="Login" className={styles.btn}/>
+                <input type="submit" value="Sign Up!" className={styles.btn}/>
             </form>
         </div>
     );

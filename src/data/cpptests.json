@@ -1,0 +1,26 @@
+{
+    "tests": [
+        "for(int i = 0; i < 5; i++) {",
+        "for(int i = 0; i < N; i++) {", 
+        "for(int i = 0; i < nums.size(); i++) {",
+        "for(int i = 0; i < v.size(); i++) {",
+        "for(int j = i; j < M; j++) {",
+        "for(auto& x : str) {",
+        "for(int x : nums) {",
+        "for(string& s : str) {",
+        "int max = INT_MAX, min = INT_MIN;", 
+        "int ans = 0; int i = 1;", 
+        "ans = max(ans, v[i]);",
+        "cout << ans << endl;",
+        "cin >> x >> y;",
+        "for(auto& a : v) cin >> a;",
+        "while(N--) cout << v[N];",
+        "vector<int> v(10, -1);",
+        "v.push_back(i + 1);",
+        "unordered_map<int, int> m; m[i]++;",
+        "set<int> s; s.insert(5);",
+        "void helper(vector<int>& nums, int x) {",
+        "include <bits/stdc++.h>;",
+        "if(x % 2 == 0) cout << \"even\" << endl;"
+    ]
+}

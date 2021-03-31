@@ -29,6 +29,12 @@
     font-size: 15px;
 }
 
+.userStats h4 {
+    margin-top: 5px;
+    font-size: 15px;
+    color: red;
+}
+
 .startBtn {
     cursor: pointer;
     padding: 8px 15px;

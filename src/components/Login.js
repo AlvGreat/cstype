@@ -1,15 +1,17 @@
 import styles from '../styles/LoginSignup.module.css';
 import { Redirect } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import firebase from "firebase/app";
 import "firebase/auth";
 
 const Login = () => {
+    let isMountedRef = useRef(null);
+
     let [returnToHome, setReturnToHome] = useState(false);
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
-    let [errorPage, setErrorPage] = useState(false);
+    let [errorMessage, setErrorMessage] = useState(null);
 
     const updateEmail = (e) => {
         setEmail(e.target.value);
@@ -20,30 +22,33 @@ const Login = () => {
     }
 
     const handleSubmit = (e) => {
+        // prevent default actions of a form
         e.preventDefault();
 
+        // sign in user using firebase
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then((userCredential) => {     
-                const user = userCredential.user;
-                console.log(user);
-                setReturnToHome(true);
+                if(isMountedRef.current) setReturnToHome(true);
             })
             .catch((error) => {
-                console.log(error.code);
-                console.log(error.message);
-                setErrorPage(true);
+                // set the error message and don't let the user finish logging in
+                if(isMountedRef.current) setErrorMessage(error.message);
             })
     }
 
-    if(errorPage) {
-        return <Redirect to='error'/>
-    }
+    useEffect(() => {
+        isMountedRef.current = true; 
+
+        // update our variable if the component is unmounted
+        return () => isMountedRef.current = false;
+    }, [])
+
     if(returnToHome) {
         return <Redirect to='/' />
     }
     
     return (
-        <div className={styles.center}>
+        <div>
             <form onSubmit={handleSubmit} className={styles.login}>
                 <h2 className={styles.title}>Welcome back!</h2>
                 <div className={styles.inputField}>
@@ -54,6 +59,7 @@ const Login = () => {
                     <i className="fas fa-lock"></i>
                     <input type="password" placeholder="Password" onChange={updatePassword}/>
                 </div>
+                <h3 className={styles.errorMsg}>{errorMessage}</h3>
                 <input type="submit" value="Login" className={styles.btn}/>
             </form>
         </div>

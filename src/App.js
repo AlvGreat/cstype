@@ -1,6 +1,5 @@
-import styles from './App.module.css';
+//import styles from './App.module.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -10,7 +9,9 @@ import Login from './components/Login';
 import Logout from './components/Logout';
 import Signup from './components/Signup';
 import Error from './components/Error';
-import firebase from './config/fbConfig.js';
+
+// set up firebase
+import './config/fbConfig.js';
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
               <Home />
             </Route>
             <Route path="/profile">
-              <Profile stats={{wpm: 138, avgWpm: 80, gamesPlayed: 18, avgAccuracy: 97.4, joinDate: "January 22nd, 2021"}}/>
+              <Profile />
             </Route>
             <Route path="/logout">
               <Logout />
@@ -37,7 +38,7 @@ function App() {
             <Route path="/practice">
               <Practice />
             </Route>
-            <Route path="/error">
+            <Route path="*">
               <Error />
             </Route>
           </Switch>

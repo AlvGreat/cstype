@@ -18,14 +18,23 @@
 
 .linkdiv {
     padding: 10px;
-    margin: 10px 0px;
 }
 
-.link {
-    font-size: 18px;
-    padding: 10px;
-    text-decoration: none;
-    color: white;
-    border-radius: 20px;
-    background: linear-gradient(45deg, #38d1e8, #57e3f7);
+.btn {
+    width: 125px;
+    height: 40px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: #5692fa;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 10px;
+    transition: 0.5s;
+}
+
+.btn:hover {
+    background-color: #4d84e2;
 }
