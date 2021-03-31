@@ -4,7 +4,7 @@
 
 CSType is a typing test for programmers, meaning instead of usual English, users can practice typing common phrases and code snippets from various programming languages. 
 
-The project is currently being worked on before released to the public. It is based on the React framework and uses CSS modules. 
+The project is currently being worked on before released to the public. It is built with the React framework and uses CSS modules. 
 
 ## Available Scripts
 
