@@ -6,12 +6,12 @@ import "firebase/auth";
 import "firebase/database";
 
 const Profile = () => {
-    let [isLoading, setIsLoading] = useState(true)
-    let [userData, setUserData] = useState(null);
-    let [displayName, setDisplayName] = useState(null);
-    let [signupDate, setSignupDate] = useState(null);
-    let [noData, setNoData] = useState(false);
-    let [notLoggedIn, setNotLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(true)
+    const [userData, setUserData] = useState(null);
+    const [displayName, setDisplayName] = useState(null);
+    const [signupDate, setSignupDate] = useState(null);
+    const [noData, setNoData] = useState(false);
+    const [notLoggedIn, setNotLoggedIn] = useState(false);
 
     const arrayAverage = (array) => {
         return array.reduce((a, b) => a + b) / array.length;
@@ -56,8 +56,6 @@ const Profile = () => {
 
         // make sure that we don't update React state if our component/page is unmounted
         return () => mounted = false;
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); 
 
     if(noData) {

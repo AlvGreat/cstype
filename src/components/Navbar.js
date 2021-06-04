@@ -1,26 +1,21 @@
-import { Link } from 'react-router-dom';
 import styles from '../styles/Navbar.module.css'
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 import firebase from "firebase/app";
 import "firebase/auth";
 
 const Navbar = () => {
-    let [isDoneLoading, setIsDoneLoading] = useState(false);
-    let [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isDoneLoading, setIsDoneLoading] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
   
     // if user has logged in or out
     firebase.auth().onAuthStateChanged(user => {
         // when we get the data about the user being logged in or not
-        setIsDoneLoading(true);
+        setIsDoneLoading(() => true);
 
-        // if signed in
-        if(user) {
-            setIsLoggedIn(true);
-        }
-        else {
-            setIsLoggedIn(false);
-        }
+        // set the logged in variable depending on if firebase provided a valid user not-null object
+        user ? setIsLoggedIn(true) : setIsLoggedIn(false);
     })
 
     return (

@@ -12,27 +12,27 @@ const Practice = () => {
     // https://reactjs.org/docs/hooks-reference.html#useref
     // "Essentially, useRef is like a “box” that can hold a mutable value in its .current property."
     // use this to keep track of if our component gets unnmounted
-    let isMountedRef = useRef(null);
+    const isMountedRef = useRef(null);
 
     // keep track of the character index the user is on 
     let [chIndex, setChIndex] = useState(0);
 
     // when the user types the first key, keep track of the time
-    let [startTime, setStartTime] = useState(null); 
+    const [startTime, setStartTime] = useState(null); 
 
     // tell the user to make an account to save data
-    let [displayMsg, setDisplayMsg] = useState("");
+    const [displayMsg, setDisplayMsg] = useState("");
 
     // display stats for the user
-    let [wpm, setWpm] = useState(0);
+    const [wpm, setWpm] = useState(0);
 
     // keep track of how many mistakes the user makes
     let [inaccuracies, setInaccuracies] = useState(0);
-    let [accuracyPercent, setAccuracyPercent] = useState(100);
+    const [accuracyPercent, setAccuracyPercent] = useState(100);
     
     // keep track of the user's average wpm and accuracy
-    let [avgWpm, setAvgWpm] = useState(0);
-    let [avgAccuracy, setAvgAccuracy] = useState(0);
+    const [avgWpm, setAvgWpm] = useState(0);
+    const [avgAccuracy, setAvgAccuracy] = useState(0);
 
     // get a random code snippet for the user to type
     const getRandText = () => {
@@ -129,7 +129,7 @@ const Practice = () => {
                 })
             }  
             else {
-                setDisplayMsg("Create an account to save your progress!");
+                setDisplayMsg("Create an account to track and save your progress!");
             }
         });
         
@@ -221,7 +221,7 @@ const Practice = () => {
             }
             // if they typed some other valid character, then they typed it wrong
             else if(key.length === 1){
-                setInaccuracies(++inaccuracies);
+                setInaccuracies(inaccuracies => inaccuracies + 1);
             }
         }
 

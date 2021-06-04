@@ -8,7 +8,7 @@ import Practice from './components/Practice';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import Signup from './components/Signup';
-import Error from './components/Error';
+import Error404 from './components/Error404';
 
 // set up firebase
 import './config/fbConfig.js';
@@ -39,7 +39,7 @@ function App() {
               <Practice />
             </Route>
             <Route path="*">
-              <Error />
+              <Error404 />
             </Route>
           </Switch>
         </div>

@@ -79,4 +79,6 @@
 .errorMsg {
     color: red;
     font-size: 12px;
+    width: 375px;
+    text-align: center;
 }

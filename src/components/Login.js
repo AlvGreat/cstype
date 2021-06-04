@@ -1,24 +1,22 @@
 import styles from '../styles/LoginSignup.module.css';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 
 import firebase from "firebase/app";
 import "firebase/auth";
 
 const Login = () => {
-    let isMountedRef = useRef(null);
+    const isMountedRef = useRef(null);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState(null);
 
-    let [returnToHome, setReturnToHome] = useState(false);
-    let [email, setEmail] = useState("");
-    let [password, setPassword] = useState("");
-    let [errorMessage, setErrorMessage] = useState(null);
-
+    // update email and password variables as user types them into form input fields 
     const updateEmail = (e) => {
-        setEmail(e.target.value);
+        setEmail(() => e.target.value);
     }
-
     const updatePassword = (e) => {
-        setPassword(e.target.value);
+        setPassword(() => e.target.value);
     }
 
     const handleSubmit = (e) => {
@@ -27,11 +25,12 @@ const Login = () => {
 
         // sign in user using firebase
         firebase.auth().signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {     
-                if(isMountedRef.current) setReturnToHome(true);
+            .then((userCredential) => {    
+                // if the page is still mounted, return to the homepage
+                if(isMountedRef.current) returnHome(); 
             })
             .catch((error) => {
-                // set the error message and don't let the user finish logging in
+                // set the error message provided by Firebase and don't let the user finish logging in
                 if(isMountedRef.current) setErrorMessage(error.message);
             })
     }
@@ -39,12 +38,14 @@ const Login = () => {
     useEffect(() => {
         isMountedRef.current = true; 
 
-        // update our variable if the component is unmounted
+        // update the corresponding variable if the React component is unmounted
         return () => isMountedRef.current = false;
     }, [])
 
-    if(returnToHome) {
-        return <Redirect to='/' />
+    // provide a function to return to the homepage
+    const history = useHistory();    
+    const returnHome = () => {    
+        history.push("/");
     }
     
     return (

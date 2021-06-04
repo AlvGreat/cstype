@@ -6,22 +6,21 @@ import firebase from "firebase/app";
 import "firebase/auth";
 
 const Signup = () => {
-    let isMountedRef = useRef(null);
+    const isMountedRef = useRef(null);
 
-    let [returnToHome, setReturnToHome] = useState(false);
-    let [email, setEmail] = useState("");
-    let [password, setPassword] = useState("");
-    let [username, setUsername] = useState("");
-    let [errorMessage, setErrorMessage] = useState(null);
+    const [returnToHome, setReturnToHome] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const [errorMessage, setErrorMessage] = useState(null);
 
+    // update variables as user types them into form input fields
     const updateEmail = (e) => {
         setEmail(e.target.value);
     }
-
     const updatePassword = (e) => {
         setPassword(e.target.value);
     }
-
     const updateUsername = (e) => {
         setUsername(e.target.value);
     }
@@ -30,12 +29,12 @@ const Signup = () => {
         e.preventDefault();
 
         if(username.length < 3) {
-            setErrorMessage("You must choose a username longer than 3 characters");
+            setErrorMessage("You must choose a username with a length of 3 characters or more.");
         }
         else {
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {     
-                    // update their profile to set their username
+                    // update their profile to have their username
                     userCredential.user.updateProfile({
                         displayName: username
                     }).then(() => {
@@ -80,7 +79,7 @@ const Signup = () => {
                     <input type="password" placeholder="Password" onChange={updatePassword}/>
                 </div>
                 <h3 className={styles.errorMsg}>{errorMessage}</h3>
-                <input type="submit" value="Sign Up!" className={styles.btn}/>
+                <input type="submit" value="Sign Up" className={styles.btn}/>
             </form>
         </div>
     );
