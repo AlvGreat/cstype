@@ -9,9 +9,7 @@ const cppTests = require("../data/cpptests.json");
 //const javaTests = require("../data/javatests.json");
 
 const Practice = () => {
-    // https://reactjs.org/docs/hooks-reference.html#useref
-    // "Essentially, useRef is like a “box” that can hold a mutable value in its .current property."
-    // use this to keep track of if our component gets unnmounted
+    // useRef provides a variable with a .current property to keep track of if our component gets unnmounted
     const isMountedRef = useRef(null);
 
     // keep track of the character index the user is on 
