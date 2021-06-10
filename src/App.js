@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Profile from './components/Profile';
-import Practice from './components/Practice';
+import TypingTest from './components/TypingTest';
+//import Practice from './components/Practice';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import Signup from './components/Signup';
@@ -36,7 +37,7 @@ function App() {
               <Signup />
             </Route>
             <Route path="/practice">
-              <Practice />
+              <TypingTest />
             </Route>
             <Route path="*">
               <Error404 />

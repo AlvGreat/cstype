@@ -1,3 +1,6 @@
+// OLD code for reference
+// The code from here has been cleaned up and moved to the TypingTest and TypingStats components
+
 import styles from '../styles/Practice.module.css';
 import { useState, useEffect, useRef } from 'react';
 
@@ -58,7 +61,7 @@ const Practice = () => {
             return (<span className={styles.cursor} key={index}>{char}</span>)
         }
         return (<span key={index}>{char}</span>);
-    });    
+    });
     
     // returns an object containing the current wpm and accuracy
     const calculateStats = (chIndex) => {
@@ -130,7 +133,6 @@ const Practice = () => {
                 setDisplayMsg("Create an account to track and save your progress!");
             }
         });
-        
     }
 
     // writes the new wpm and accuracy to Firebase
@@ -211,7 +213,7 @@ const Practice = () => {
                 const { calculatedWpm, calculatedAccuracy } = calculateStats(chIndex);
 
                 if(chIndex === text.length) {
-                    writeUserData(calculatedWpm, calculatedAccuracy);
+                   writeUserData (calculatedWpm, calculatedAccuracy);
                 }
             }
             else if(key === "Backspace") {

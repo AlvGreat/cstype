@@ -93,7 +93,7 @@ const Profile = () => {
                 </div>
                 <div>
                     {!isLoading && <h2>Recent Avg. Accuracy: {arrayAverage(userData.pastGamesAcc).toFixed(2)}%</h2>}
-                    {!isLoading && <h2>All-time Avg. Accuracy: {(userData.avgOverallAcc).toFixed(2)} %</h2>}
+                    {!isLoading && <h2>All-time Avg. Accuracy: {(userData.avgOverallAcc).toFixed(2)}%</h2>}
                 </div>
             </div>
         </div>
