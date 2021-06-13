@@ -1,5 +1,5 @@
 import styles from '../styles/LoginSignup.module.css';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useState, useEffect, useRef} from 'react';
 
 import firebase from "firebase/app";
@@ -8,11 +8,16 @@ import "firebase/auth";
 const Signup = () => {
     const isMountedRef = useRef(null);
 
-    const [returnToHome, setReturnToHome] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
+
+    // provide a function to return to the homepage
+    const history = useHistory();    
+    const returnHome = () => {    
+        history.push("/");
+    }
 
     // update variables as user types them into form input fields
     const updateEmail = (e) => {
@@ -38,7 +43,7 @@ const Signup = () => {
                     userCredential.user.updateProfile({
                         displayName: username
                     }).then(() => {
-                        if(isMountedRef.current) setReturnToHome(true);
+                        if(isMountedRef.current) returnHome();
                     })
                     .catch((error) => {
                         if(isMountedRef.current) setErrorMessage(error.message);
@@ -57,10 +62,6 @@ const Signup = () => {
         return () => isMountedRef.current = false;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    if(returnToHome) {
-        return <Redirect to='/' />
-    }
 
     return (
         <div>

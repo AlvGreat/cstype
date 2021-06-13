@@ -1,4 +1,4 @@
-import styles from '../styles/Practice.module.css';
+import styles from '../styles/TypingTest.module.css';
 import { useState, useEffect, useRef } from 'react';
 import TypingStats from './TypingStats';
 
@@ -129,7 +129,7 @@ const TypingTest = () => {
         }
     }
     
-    // read the user's data when they first open the page
+    // read the user's data when they first open the page/if they switch user profiles
     const readUserData = () => {
         firebase.auth().onAuthStateChanged(user => {
             // if the component is no longer mounted, don't continue
@@ -197,6 +197,11 @@ const TypingTest = () => {
 
     // function for handling when a user presses a key
     const handleKeyDown = ({ key }) => {
+        // if the user hits Esc, restart the typing test
+        if(key === "Escape") {
+            resetPageData();
+        }
+
         // make sure the user is not already done with the test
         if(typingPageData.chIndex >= (typingPageData.test).length) return;
 
@@ -237,11 +242,6 @@ const TypingTest = () => {
                 ...prevState,
                 chIndex: prevState.chIndex - 1
             }));
-        }
-        
-        // if the user hits Esc, restart the typing test
-        if(key === "Escape") {
-            resetPageData();
         }
     }
 

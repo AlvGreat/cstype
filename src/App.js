@@ -5,7 +5,7 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Profile from './components/Profile';
 import TypingTest from './components/TypingTest';
-//import Practice from './components/Practice';
+import ResetPassword from './components/ResetPassword';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import Signup from './components/Signup';
@@ -21,7 +21,7 @@ function App() {
         <Navbar/>
         <div className="content">
           <Switch>
-            <Route exact path = "/">
+            <Route exact path="/">
               <Home />
             </Route>
             <Route path="/profile">
@@ -39,6 +39,9 @@ function App() {
             <Route path="/practice">
               <TypingTest />
             </Route>
+            <Route path="/resetpassword">
+              <ResetPassword />
+            </Route>
             <Route path="*">
               <Error404 />
             </Route>
@@ -46,7 +49,6 @@ function App() {
         </div>
       </div>
     </Router>
-    
   );
 }
 

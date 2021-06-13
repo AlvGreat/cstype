@@ -7,7 +7,8 @@
 }
 
 .title {
-    margin-bottom: 10px;
+    font-size: 24px;
+    margin-bottom: 25px;
 }
 
 .inputField {
@@ -46,7 +47,7 @@
     color: #fff;
     font-weight: 600;
     text-transform: uppercase;
-    margin-top: 10px;
+    margin-top: 18px;
     transition: 0.5s;
 }
 
@@ -81,4 +82,16 @@
     font-size: 12px;
     width: 375px;
     text-align: center;
+}
+
+.smallLink {
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    margin-left: 175px;
+    color: rgb(130, 130, 130);
+}
+
+.smallLink:hover {
+    color: rgb(49, 49, 49);
 }
