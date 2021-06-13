@@ -18,6 +18,18 @@
     margin-bottom: 4vh;
 }
 
+.icon {
+    font-size: 18px;
+    margin-left: 10px;
+    color: black;
+}
+
+.icon:hover {
+    font-size: 22px;
+    color: rgb(100, 100, 100);
+    cursor: pointer;
+}
+
 .username {
     font-size: 45px;
     margin-bottom: 5px;

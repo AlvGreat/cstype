@@ -5,10 +5,11 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Profile from './components/Profile';
 import TypingTest from './components/TypingTest';
-import ResetPassword from './components/ResetPassword';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import Signup from './components/Signup';
+import ResetPassword from './components/ResetPassword';
+import ChangeUsername from './components/ChangeUsername';
 import Error404 from './components/Error404';
 
 // set up firebase
@@ -41,6 +42,9 @@ function App() {
             </Route>
             <Route path="/resetpassword">
               <ResetPassword />
+            </Route>
+            <Route path="/changeusername">
+              <ChangeUsername />
             </Route>
             <Route path="*">
               <Error404 />

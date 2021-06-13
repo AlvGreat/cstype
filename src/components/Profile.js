@@ -1,4 +1,5 @@
 import styles from '../styles/Profile.module.css';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import firebase from "firebase/app";
@@ -62,7 +63,6 @@ const Profile = () => {
         return (
             <div className={styles.middle}>
                 <h1 className={styles.username}>{displayName}</h1>
-
                 <h3>You have not played any games yet!</h3>
             </div>
         )
@@ -76,24 +76,34 @@ const Profile = () => {
         )
     }
 
+    if(isLoading) {
+        return (
+            <div className={styles.profile}>
+                <h2 className={styles.loadingText}>Loading...</h2>
+            </div>
+        )
+    }
+
     return (
         <div className={styles.profile}>
-            {isLoading && <h2 className={styles.loadingText}>Loading...</h2>}
             <div className={styles.header}>
-                {!isLoading && <h1 className={styles.username}>{displayName}</h1>}
-                {!isLoading && <h3 className={styles.smallStats}>User since {signupDate.toLocaleDateString()}</h3>}
-                {!isLoading && <h3 className={styles.smallStats}>Games Played: {userData.gamesPlayed} games</h3>}
+                <h1 className={styles.username}>
+                    {displayName}
+                    <Link to="/changeusername"><i className={`fas fa-pencil-alt ${styles.icon}`}></i></Link>
+                </h1>
+                <h3 className={styles.smallStats}>User since {signupDate.toLocaleDateString()}</h3>
+                <h3 className={styles.smallStats}>Games Played: {userData.gamesPlayed} games</h3>
             </div>
 
             <div className={styles.cols}>
                 <div>
-                    {!isLoading && <h2>Recent Avg. Speed: {arrayAverage(userData.pastGamesWpm).toFixed(2)} wpm</h2>}
-                    {!isLoading && <h2>All-time Avg. Speed: {(userData.avgOverallWpm).toFixed(2)} wpm</h2>}
-                    {!isLoading && <h2>Fastest Speed: {userData.topWpm.toFixed(2)} wpm</h2>}
+                    <h2>Recent Avg. Speed: {arrayAverage(userData.pastGamesWpm).toFixed(2)} wpm</h2>
+                    <h2>All-time Avg. Speed: {(userData.avgOverallWpm).toFixed(2)} wpm</h2>
+                    <h2>Fastest Speed: {userData.topWpm.toFixed(2)} wpm</h2>
                 </div>
                 <div>
-                    {!isLoading && <h2>Recent Avg. Accuracy: {arrayAverage(userData.pastGamesAcc).toFixed(2)}%</h2>}
-                    {!isLoading && <h2>All-time Avg. Accuracy: {(userData.avgOverallAcc).toFixed(2)}%</h2>}
+                    <h2>Recent Avg. Accuracy: {arrayAverage(userData.pastGamesAcc).toFixed(2)}%</h2>
+                    <h2>All-time Avg. Accuracy: {(userData.avgOverallAcc).toFixed(2)}%</h2>
                 </div>
             </div>
         </div>
