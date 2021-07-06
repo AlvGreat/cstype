@@ -2,6 +2,9 @@ import styles from '../styles/Profile.module.css';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
+import React from 'react';
+import { Line } from 'react-chartjs-2';
+
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
@@ -83,6 +86,41 @@ const Profile = () => {
             </div>
         )
     }
+    
+    // data/options objects for react charts
+    const wpmData = {
+        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        datasets: [
+            {
+                label: 'WPM',
+                data: userData.pastGamesWpm,
+                fill: false,
+                backgroundColor: 'rgb(199, 133, 237)',
+                borderColor: 'rgba(199, 133, 237, 0.4)',
+            },
+        ],
+    };
+    
+    const accData = {
+        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        datasets: [
+            {
+                label: 'Accuracy',
+                data: userData.pastGamesAcc,
+                fill: false,
+                backgroundColor: 'rgb(133, 237, 154)',
+                borderColor: 'rgba(133, 237, 154, 0.4)',
+            },
+        ],
+    }
+
+    const chartOptions = {
+        responsive: true, 
+        maintainAspectRatio: false,
+        ticks: {
+            maxTicksLimit: 6
+        }
+    }
 
     return (
         <div className={styles.profile}>
@@ -106,6 +144,13 @@ const Profile = () => {
                     <h2>All-time Avg. Accuracy: {(userData.avgOverallAcc).toFixed(2)}%</h2>
                 </div>
             </div>
+
+            <div className={styles.chart}>
+                <Line data={wpmData} options={chartOptions}/>
+            </div> 
+            <div className={styles.chart}>
+                <Line data={accData} options={chartOptions}/>
+            </div> 
         </div>
     );
 }

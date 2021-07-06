@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 const Home = () => {
     // use the useHistory function from react-router-dom in order to change to a different page
     const history = useHistory();
-
     const routeChange = () => {    
         // redirect to the practice page
         history.push("/practice");

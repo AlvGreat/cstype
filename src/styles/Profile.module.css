@@ -14,8 +14,8 @@
 }
 
 .header {
-    margin-top: 15vh;
-    margin-bottom: 4vh;
+    margin-top: 10vh;
+    margin-bottom: 3vh;
 }
 
 .icon {
@@ -55,4 +55,9 @@
 .loadingText {
     text-align: center;
     margin-top: 25vh;
+}
+
+.chart {
+    margin-bottom: 10px;
+    height: 21vh;
 }
