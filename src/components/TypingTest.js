@@ -74,27 +74,39 @@ const TypingTest = () => {
     }
 
     // return the user's accuracy based on the typing page data 
-    const getAccuracy = () => {
+    const getAccuracy = (chIndex, gameMistakes) => {
         // fix divide by 0 error
-        if(typingPageData.chIndex + typingPageData.gameMistakes === 0) return 100;
+        if(chIndex + gameMistakes === 0) return 100;
 
-        return (100 * typingPageData.chIndex) / (typingPageData.chIndex + typingPageData.gameMistakes)
+        return (100 * chIndex) / (chIndex + gameMistakes)
     }
 
     // this function updates the firebaseData variable as well as writes the data to Firebase 
     const updateFirebaseData = () => {
+        // get the most updated version of the data
+        let typingPageData;
+        setTypingPageData(prevState => {
+            typingPageData = prevState;
+            return prevState;
+        });
+        
+        console.log(typingPageData);
+
         let newData;
 
         // if there was previously no data
         if(!firebaseData) {
-            newData = {
-                avgOverallAcc: getAccuracy(),
-                avgOverallWpm: typingPageData.gameWpm,
-                gamesPlayed: 1,
-                pastGamesAcc: [getAccuracy()],
-                pastGamesWpm: [typingPageData.gameWpm],
-                topWpm: typingPageData.gameWpm
-            };
+            setFirebaseData(prevState => {
+                newData = {
+                    avgOverallAcc: getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes),
+                    avgOverallWpm: typingPageData.gameWpm,
+                    gamesPlayed: 1,
+                    pastGamesAcc: [getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes)],
+                    pastGamesWpm: [typingPageData.gameWpm],
+                    topWpm: typingPageData.gameWpm
+                };
+                return newData;
+            });
         }
         else {
             let newPastWpm = [...firebaseData.pastGamesWpm];
@@ -108,13 +120,13 @@ const TypingTest = () => {
 
             // add the newest data to the end of the arrays
             newPastWpm.push(typingPageData.gameWpm);
-            newPastAcc.push(getAccuracy());
+            newPastAcc.push(getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes));
 
             // if there is currently data, update accordingly
             setFirebaseData(prevState => {
                 // weigh the old overall stats and add the next stats in
                 newData = {
-                    avgOverallAcc: (prevState.avgOverallAcc * prevState.gamesPlayed + getAccuracy()) / (prevState.gamesPlayed + 1),
+                    avgOverallAcc: (prevState.avgOverallAcc * prevState.gamesPlayed + getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes)) / (prevState.gamesPlayed + 1),
                     avgOverallWpm: (prevState.avgOverallWpm * prevState.gamesPlayed + typingPageData.gameWpm) / (prevState.gamesPlayed + 1),
                     gamesPlayed: prevState.gamesPlayed + 1,
                     pastGamesAcc: newPastAcc,
@@ -124,9 +136,9 @@ const TypingTest = () => {
 
                 return newData;
             });
-
-            writeUserData(newData);
         }
+
+        writeUserData(newData);
     }
     
     // read the user's data when they first open the page/if they switch user profiles
@@ -226,6 +238,11 @@ const TypingTest = () => {
             // if the user is done with the test, update the firebase data
             if(typingPageData.chIndex === typingPageData.test.length - 1) {
                 updateFirebaseData();
+
+                setTypingPageData(prevState => ({
+                    ...prevState, 
+                    displayMsg: ""
+                }));
             }
         }
         // if they typed some other valid character, then it's wrong
@@ -272,7 +289,7 @@ const TypingTest = () => {
                 </div>
             </div>
             <TypingStats 
-                accuracy={getAccuracy()} 
+                accuracy={getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes)} 
                 firebaseData={firebaseData} 
                 pageData={typingPageData} 
             />

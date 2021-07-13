@@ -18,6 +18,10 @@
     margin-bottom: 3vh;
 }
 
+.extraMargin {
+    margin-top: 6vh;
+}
+
 .icon {
     font-size: 18px;
     margin-left: 10px;

@@ -64,9 +64,19 @@ const Profile = () => {
 
     if(noData) {
         return (
-            <div className={styles.middle}>
-                <h1 className={styles.username}>{displayName}</h1>
-                <h3>You have not played any games yet!</h3>
+            <div className={styles.profile}>
+                <div className={styles.header}>
+                    <h1 className={styles.username}>
+                        {displayName}
+                        <Link to="/changeusername"><i className={`fas fa-pencil-alt ${styles.icon}`}></i></Link>
+                    </h1>
+                    <h3 className={styles.smallStats}>User since {signupDate.toLocaleDateString()}</h3>
+                    <h3 className={styles.smallStats}>Games Played: 0 games</h3>
+                </div>
+
+                <div className={`${styles.middle} ${styles.extraMargin}`}>
+                    <h2>Play some games to see more stats!</h2>
+                </div>
             </div>
         )
     }
@@ -74,7 +84,9 @@ const Profile = () => {
     if(notLoggedIn) {
         return (
             <div className={styles.middle}>
-                <h3>Log in to save your profile!</h3>
+                <div className={styles.header}>
+                    <h3>Log in to save your profile!</h3>
+                </div>
             </div>
         )
     }
