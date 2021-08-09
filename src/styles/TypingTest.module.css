@@ -1,11 +1,19 @@
-.typing {
+.mainContainer {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
     padding: 50px;
     font-size: 20px;
+}
+
+.columnsContainer {
+    margin-top: 15px;
     display: grid;
     grid-template-columns: 3fr 1fr;
+}
+
+.settingsContainer {
+    margin-bottom: 20px;
 }
 
 .cursor {

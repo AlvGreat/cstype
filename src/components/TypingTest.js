@@ -1,18 +1,21 @@
 import styles from '../styles/TypingTest.module.css';
 import { useState, useEffect, useRef } from 'react';
 import TypingStats from './TypingStats';
+import SettingsModal from './SettingsModal';
 
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 
 // get the actual typing tests
-const cppTests = require("../data/cpptests.json");
-//const javaTests = require("../data/javatests.json");
+const typingTests = {
+    cpp: require("../data/cpp-tests.json"),
+    java: require("../data/java-tests.json")
+}
 
 // return a random code snippet for the user to type
-const getRandText = () => {
-    return cppTests.tests[Math.floor(Math.random() * cppTests.tests.length)];
+const getRandText = (testType) => {
+    return typingTests[testType].tests[Math.floor(Math.random() * typingTests[testType].tests.length)];
 }
 
 const TypingTest = () => {
@@ -20,10 +23,11 @@ const TypingTest = () => {
 
     // keep track of a user's data using the same object as the one stored in Firebase
     const [firebaseData, setFirebaseData] = useState(null);
+    const [testLanguage, setTestLanguage] = useState("cpp");
 
     // store all other data to be used on the page in a separate object
     const [typingPageData, setTypingPageData] = useState({
-        test: getRandText(),
+        test: getRandText(testLanguage),
         chIndex: 0, 
         startTime: null, 
         displayMsg: "",
@@ -34,7 +38,7 @@ const TypingTest = () => {
     // generate a new test with random text and reset variables
     const resetPageData = () => {
         setTypingPageData({
-            test: getRandText(),
+            test: getRandText(testLanguage),
             chIndex: 0, 
             startTime: null, 
             displayMsg: "",
@@ -89,8 +93,6 @@ const TypingTest = () => {
             typingPageData = prevState;
             return prevState;
         });
-        
-        console.log(typingPageData);
 
         let newData;
 
@@ -103,7 +105,8 @@ const TypingTest = () => {
                     gamesPlayed: 1,
                     pastGamesAcc: [getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes)],
                     pastGamesWpm: [typingPageData.gameWpm],
-                    topWpm: typingPageData.gameWpm
+                    topWpm: typingPageData.gameWpm,
+                    testLanguage: testLanguage
                 };
                 return newData;
             });
@@ -122,16 +125,16 @@ const TypingTest = () => {
             newPastWpm.push(typingPageData.gameWpm);
             newPastAcc.push(getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes));
 
-            // if there is currently data, update accordingly
+            // if there is currently data, weigh the old overall stats and add new stats in
             setFirebaseData(prevState => {
-                // weigh the old overall stats and add the next stats in
                 newData = {
                     avgOverallAcc: (prevState.avgOverallAcc * prevState.gamesPlayed + getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes)) / (prevState.gamesPlayed + 1),
                     avgOverallWpm: (prevState.avgOverallWpm * prevState.gamesPlayed + typingPageData.gameWpm) / (prevState.gamesPlayed + 1),
                     gamesPlayed: prevState.gamesPlayed + 1,
                     pastGamesAcc: newPastAcc,
                     pastGamesWpm: newPastWpm,
-                    topWpm: Math.max(prevState.topWpm, typingPageData.gameWpm)
+                    topWpm: Math.max(prevState.topWpm, typingPageData.gameWpm),
+                    testLanguage: testLanguage
                 }
 
                 return newData;
@@ -142,7 +145,7 @@ const TypingTest = () => {
     }
     
     // read the user's data when they first open the page/if they switch user profiles
-    const readUserData = () => {
+    const readFirebaseData = () => {
         firebase.auth().onAuthStateChanged(user => {
             // if the component is no longer mounted, don't continue
             if(!isMountedRef.current) return;
@@ -161,6 +164,7 @@ const TypingTest = () => {
                         // if there is data, then save it to the firebaseData variable
                         if(data != null) {
                             setFirebaseData(data);
+                            setTestLanguage(data.testLanguage);
 
                             setTypingPageData(prevState => ({
                                 ...prevState, 
@@ -273,26 +277,49 @@ const TypingTest = () => {
     useEffect(() => {
         isMountedRef.current = true;
 
-        readUserData();
+        readFirebaseData();
 
         return () => {
             isMountedRef.current = false; 
         }
     }, []);
 
+    useEffect(() => {
+        resetPageData();
+
+        if(firebaseData != null) {
+            // write updated programming language setting to Firebase                    
+            let updatedSettingsData = {
+                ...firebaseData,
+                testLanguage: testLanguage
+            };
+            writeUserData(updatedSettingsData);
+        }
+
+        // eslint-disable-next-line
+    }, [testLanguage]);
+    
     return (
-        <div className={styles.typing}>
-            <div>
-                {letterSpans}
-                <div className={styles.buttons}>
-                    {<div onClick={resetPageData} className={styles.startBtn}>Next Test</div>}
-                </div>
+        <div className={styles.mainContainer}>
+            <div className={styles.settingsContainer}>
+                <span className={styles.outline}>
+                    <SettingsModal testLanguage={testLanguage} setTestLanguage={setTestLanguage}/> 
+                </span>
             </div>
-            <TypingStats 
-                accuracy={getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes)} 
-                firebaseData={firebaseData} 
-                pageData={typingPageData} 
-            />
+            <div className={styles.columnsContainer}>
+                <div>
+                    {letterSpans}
+                    <div className={styles.buttons}>
+                        {<div onClick={resetPageData} className={styles.startBtn}>Next Test</div>}
+                    </div>
+                </div>
+                <TypingStats 
+                    accuracy={getAccuracy(typingPageData.chIndex, typingPageData.gameMistakes)} 
+                    firebaseData={firebaseData} 
+                    pageData={typingPageData} 
+                />
+            </div>
+            
         </div>
     );
 }

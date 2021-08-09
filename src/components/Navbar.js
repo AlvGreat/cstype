@@ -22,7 +22,7 @@ const Navbar = () => {
         <nav className={styles.navbar}>
             <div className={styles.logo}> 
                 <Link to="/" style={{textDecoration: "none"}}>
-                    <h1>CS</h1><h2 className={styles.logosmall}>type</h2>
+                    <h1>CS</h1><h2 className={styles.logoSmall}>type</h2>
                 </Link>
             </div>
             <div className={styles.navLinks}>

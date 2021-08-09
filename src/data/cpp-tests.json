@@ -20,19 +20,20 @@
         "while(N--) cout << v[N];",
         "vector<int> v(10, -1);",
         "v.push_back(i + 1);",
-        "int arr[] = {10, 20, 30}",
+        "int arr[] = {10, 20, 30};",
         "unordered_map<int, int> m; m[i]++;",
         "set<int> s; s.insert(5);",
+        "priority_queue<int> pq; pq.pop();",
+        "sort(v.begin(), v.end());",
         "void helper(vector<int>& nums, int x) {",
         "void printArray(int arr[], int length) {",
         "int vectorSum(vector<int>& v) {",
-        "priority_queue<int> pq; pq.pop();",
         "#include <stdio.h>;",
         "#include <string.h>;",
         "#include <math.h>;",
         "#include <bits/stdc++.h>;",
         "using namespace std;",
-        "else if(x % 3 == 0 && x % 5 == 0) cout << \"fizzbuzz\";",
+        "if(x % 3 == 0 && x % 5 == 0) cout << \"fizzbuzz\";",
         "if(x % 2 == 0) cout << \"even\" << endl;"
     ]
 }
