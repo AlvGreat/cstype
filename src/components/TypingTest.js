@@ -256,9 +256,8 @@ const TypingTest = () => {
                 gameMistakes: prevState.gameMistakes + 1
             }));
         }
-        
         // if the user hits backspace, move the chIndex back
-        if(key === "Backspace") {
+        else if(typingPageData.chIndex > 0 && key === "Backspace") {
             setTypingPageData(prevState => ({
                 ...prevState,
                 chIndex: prevState.chIndex - 1
