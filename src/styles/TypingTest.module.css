@@ -20,6 +20,10 @@
     background-color: rgb(181, 231, 247);
 }
 
+.mistake {
+    background-color: rgb(247, 181, 181);
+}
+
 .done { 
     color: #bbbbbb;
 }

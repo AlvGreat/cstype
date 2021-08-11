@@ -12,10 +12,10 @@ const SettingsModal = ({ testLanguage, setTestLanguage }) => {
             "cpp": () => setTestLanguage("cpp")
         }
 
-        let arr = [];
+        let i = 0, arr = [];
         for (const s in settings) {
-            if(testLanguage === s) arr.push(<div onClick={settings[s]} className={`${styles.btn} ${styles.activeBtn}`}>{s}</div>);
-            else arr.push(<div onClick={settings[s]} className={styles.btn}>{s}</div>);
+            if(testLanguage === s) arr.push(<div key={i++} onClick={settings[s]} className={`${styles.btn} ${styles.activeBtn}`}>{s}</div>);
+            else arr.push(<div key={i++} onClick={settings[s]} className={styles.btn}>{s}</div>);
         }
         return arr;
     }

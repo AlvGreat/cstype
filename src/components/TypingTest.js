@@ -29,6 +29,7 @@ const TypingTest = () => {
     const [typingPageData, setTypingPageData] = useState({
         test: getRandText(testLanguage),
         chIndex: 0, 
+        mistakeIndex: -1,
         startTime: null, 
         displayMsg: "",
         gameWpm: 0, 
@@ -40,6 +41,7 @@ const TypingTest = () => {
         setTypingPageData({
             test: getRandText(testLanguage),
             chIndex: 0, 
+            mistakeIndex: -1,
             startTime: null, 
             displayMsg: "",
             gameWpm: 0, 
@@ -49,17 +51,31 @@ const TypingTest = () => {
 
     // turn each letter into a span
     const letterSpans = (typingPageData.test).split('').map((char, index) => {
+        // if the user currently has a mistake
+        if(typingPageData.mistakeIndex !== -1 && typingPageData.mistakeIndex < typingPageData.chIndex) {
+            if(index < typingPageData.mistakeIndex) {
+                return (<span className={styles.done} key={index}>{char}</span>);
+            }
+            if(index >= typingPageData.mistakeIndex && index < typingPageData.chIndex) {
+                return (<span className={`${styles.mistake}`} key={index}>{char}</span>);
+            }
+            if(index === typingPageData.chIndex) {
+                return (<span className={styles.cursor} key={index}>{char}</span>)
+            }
+            return (<span key={index}>{char}</span>);
+        }
+
+        // if the user has no mistakes
         if(index < typingPageData.chIndex) {
             return (<span className={styles.done} key={index}>{char}</span>);
         }
-        // the letter that the user is at will be highlighted
-        else if(index === typingPageData.chIndex) {
+        if(index === typingPageData.chIndex) {
             return (<span className={styles.cursor} key={index}>{char}</span>)
         }
         return (<span key={index}>{char}</span>);
     });
 
-    const calculateWpm = () => {
+    const calculateWpm = (chIndex) => {
         // calculate the gap in milliseconds between the current time and start time
         const currentTime = new Date();
         let msGap = currentTime - typingPageData.startTime;
@@ -68,13 +84,10 @@ const TypingTest = () => {
         if(msGap === 0) msGap = 1; 
 
         // based on the time that the user has taken and the current character index, update the wpm
-        const currentCpm = (typingPageData.chIndex / msGap) * 1000 * 60.0;
+        const currentCpm = (chIndex / msGap) * 1000 * 60.0;
         const currentWpm = currentCpm / 5.0;
         
-        setTypingPageData(prevState => ({
-            ...prevState, 
-            gameWpm: currentWpm
-        }));
+        return currentWpm;
     }
 
     // return the user's accuracy based on the typing page data 
@@ -215,11 +228,11 @@ const TypingTest = () => {
     const handleKeyDown = ({ key }) => {
         // if the user hits Esc, restart the typing test
         if(key === "Escape") {
-            resetPageData();
+            resetPageData(); return;
         }
 
         // make sure the user is not already done with the test
-        if(typingPageData.chIndex >= (typingPageData.test).length) return;
+        if(typingPageData.mistakeIndex === -1 && typingPageData.chIndex >= (typingPageData.test).length) return;
 
         // if the user hits a character, save the time with a Date object
         if(key.length === 1 && typingPageData.startTime === null) {
@@ -229,18 +242,26 @@ const TypingTest = () => {
             }));
         }
 
-        // if the user types the correct key, move the chIndex up
+        if(typingPageData.chIndex > 0 && key === "Backspace") {
+            setTypingPageData(prevState => ({
+                ...prevState,
+                gameWpm: calculateWpm(typingPageData.chIndex + 1),
+                chIndex: prevState.chIndex - 1,
+                mistakeIndex: (prevState.chIndex <= prevState.mistakeIndex) ? -1 : prevState.mistakeIndex
+            }));
+        }
+
+        // if the user types the correct key
         if(key === typingPageData.test[typingPageData.chIndex]) {
             setTypingPageData(prevState => ({
                 ...prevState,
-                chIndex: prevState.chIndex + 1
+                gameWpm: calculateWpm(typingPageData.chIndex + 1),
+                chIndex: prevState.chIndex + 1,
+                mistakeIndex: (prevState.chIndex <= prevState.mistakeIndex) ? -1 : prevState.mistakeIndex
             }));
 
-            // calculate/update the user's wpm 
-            calculateWpm();
-
             // if the user is done with the test, update the firebase data
-            if(typingPageData.chIndex === typingPageData.test.length - 1) {
+            if(typingPageData.mistakeIndex === -1 && typingPageData.chIndex === typingPageData.test.length - 1) {
                 updateFirebaseData();
 
                 setTypingPageData(prevState => ({
@@ -248,19 +269,29 @@ const TypingTest = () => {
                     displayMsg: ""
                 }));
             }
+
+            return;
         }
-        // if they typed some other valid character, then it's wrong
-        else if(key.length === 1) {
+
+        // if they made a mistake
+        if(key.length === 1) {
+            console.log("mistake")
+            let setMistakeIndex = false, updateChIndex = false;
+
+            // if there were previously no mistakes, add it as one
+            if(typingPageData.mistakeIndex === -1) {
+                setMistakeIndex = true;
+            }
+
+            if(typingPageData.chIndex < typingPageData.test.length) {
+                updateChIndex = true;
+            }
+
             setTypingPageData(prevState => ({
                 ...prevState,
-                gameMistakes: prevState.gameMistakes + 1
-            }));
-        }
-        // if the user hits backspace, move the chIndex back
-        else if(typingPageData.chIndex > 0 && key === "Backspace") {
-            setTypingPageData(prevState => ({
-                ...prevState,
-                chIndex: prevState.chIndex - 1
+                mistakeIndex: setMistakeIndex ? prevState.chIndex : prevState.mistakeIndex,
+                chIndex: updateChIndex ?  prevState.chIndex + 1 : prevState.chIndex,
+                gameMistakes: prevState.gameMistakes + 1,
             }));
         }
     }
