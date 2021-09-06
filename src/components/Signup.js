@@ -8,26 +8,15 @@ import "firebase/auth";
 const Signup = () => {
     const isMountedRef = useRef(null);
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
+    const email = useRef("");
+    const password = useRef("");
+    const username = useRef("");
     const [errorMessage, setErrorMessage] = useState(null);
 
     // provide a function to return to the homepage
     const history = useHistory();    
     const returnHome = () => {    
         history.push("/");
-    }
-
-    // update variables as user types them into form input fields
-    const updateEmail = (e) => {
-        setEmail(e.target.value);
-    }
-    const updatePassword = (e) => {
-        setPassword(e.target.value);
-    }
-    const updateUsername = (e) => {
-        setUsername(e.target.value);
     }
 
     const handleSubmit = (e) => {
@@ -37,11 +26,11 @@ const Signup = () => {
             setErrorMessage("You must choose a username with a length of 3 characters or more.");
         }
         else {
-            firebase.auth().createUserWithEmailAndPassword(email, password)
+            firebase.auth().createUserWithEmailAndPassword(email.current.value, password.current.value)
                 .then((userCredential) => {     
                     // update their profile to have their username
                     userCredential.user.updateProfile({
-                        displayName: username
+                        displayName: username.current.value
                     }).then(() => {
                         if(isMountedRef.current) returnHome();
                     })
@@ -69,15 +58,15 @@ const Signup = () => {
                 <h2 className={styles.title}>Sign up to track your progress!</h2>
                 <div className={styles.inputField}>
                     <i className="fas fa-user"></i>
-                    <input type="text" placeholder="Username" onChange={updateUsername}/>
+                    <input type="text" placeholder="Username" ref={username}/>
                 </div>
                 <div className={styles.inputField}>
                     <i className="fas fa-envelope"></i>
-                    <input type="text" placeholder="Email" onChange={updateEmail}/>
+                    <input type="text" placeholder="Email" ref={email}/>
                 </div>
                 <div className={styles.inputField}>
                     <i className="fas fa-lock"></i>
-                    <input type="password" placeholder="Password" onChange={updatePassword}/>
+                    <input type="password" placeholder="Password" ref={password}/>
                 </div>
                 <h3 className={styles.errorMsg}>{errorMessage}</h3>
                 <input type="submit" value="Sign Up" className={styles.btn}/>

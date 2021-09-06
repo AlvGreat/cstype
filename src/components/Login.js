@@ -7,18 +7,10 @@ import "firebase/auth";
 
 const Login = () => {
     const isMountedRef = useRef(null);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const email = useRef("");
+    const password = useRef("");
     const [errorMessage, setErrorMessage] = useState(null);
 
-    // update email and password variables as user types them into form input fields 
-    const updateEmail = (e) => {
-        setEmail(() => e.target.value);
-    }
-    const updatePassword = (e) => {
-        setPassword(() => e.target.value);
-    }
-    
     // provide a function to return to the homepage
     const history = useHistory();    
     const returnHome = () => {    
@@ -30,7 +22,7 @@ const Login = () => {
         e.preventDefault();
 
         // sign in user using firebase
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        firebase.auth().signInWithEmailAndPassword(email.current.value, password.current.value)
             .then((userCredential) => {    
                 // if the page is still mounted, return to the homepage
                 if(isMountedRef.current) returnHome(); 
@@ -54,11 +46,11 @@ const Login = () => {
                 <h2 className={styles.title}>Welcome back!</h2>
                 <div className={styles.inputField}>
                     <i className="fas fa-envelope"></i>
-                    <input type="text" placeholder="Email" onChange={updateEmail}/>
+                    <input type="text" placeholder="Email" ref={email}/>
                 </div>
                 <div className={styles.inputField}>
                     <i className="fas fa-lock"></i>
-                    <input type="password" placeholder="Password" onChange={updatePassword}/>
+                    <input type="password" placeholder="Password" ref={password}/>
                 </div>
                 <Link to="/resetpassword" className={styles.smallLink}>Forgot Password?</Link>
                 <h3 className={styles.errorMsg}>{errorMessage}</h3>
